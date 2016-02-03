@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ColorSelector</string>
+    <string name="action_hsv">HSV</string>
+    <string name="action_rgb">RGB</string>
+    <string name="action_ycbcr">YCbCr</string>
+    <string name="action_cmyk">CMYK</string>
+</resources>
