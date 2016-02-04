@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 public class MainActivity extends Activity {
 
 
@@ -53,6 +55,7 @@ public class MainActivity extends Activity {
         if(pos > 2)
             return android.graphics.Color.rgb(RGB[0], RGB[1], RGB[2]);
         int[] YCbCr = new int[3];
+        //TODO Confirmed: this doesnt work as intended
         /*YCbCr[0] = (int)(0.299*RGB[0]+0.587*RGB[1]+0.114*RGB[2]);
         YCbCr[1] = (int)(128-0.169*RGB[0]-0.331*RGB[1]+0.500*RGB[2]);
         YCbCr[2] = (int)(128+0.500*RGB[0]-0.419*RGB[1]-0.081*RGB[2]);*/
@@ -60,7 +63,7 @@ public class MainActivity extends Activity {
             YCbCr[i] = (int) ((float)seekBars[i].getProgress() / 100 * 255);
         }
 
-        //TODO fix this!?
+
         YCbCr[pos] = (int) ((float) progress / 100 * 255);
         RGB[0] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
                 408.583 * (YCbCr[2] - 128)    )) >> 8;
@@ -80,6 +83,8 @@ public class MainActivity extends Activity {
 
     private int getCMYKInt(int pos, int progress, int[] RGB){
         float[] CMYK = new float[4];
+
+        //TODO fix this too
         //THIS IS THE CODE I WOULD LIKE TO USE
 
         /*K = 1-max(R', G', B')
@@ -138,6 +143,7 @@ public class MainActivity extends Activity {
                 rect.setBackgroundColor(getCMYKInt(pos, progress, RGB));
         }
         rect.setTextColor(getComplementaryColor(getButtonRGB(rect)));
+        rect.setText(Arrays.toString(RGB));
     }
 
     private void changeColorFromEditText(Button rect, int pos){
