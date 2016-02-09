@@ -1,4 +1,5 @@
 <LinearLayout
+    android:background="#FFFFFF"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,13 +23,15 @@
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07"
+            android:textColor="#000000"/>
         <EditText
             android:id="@+id/edittext1"
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_weight="0.13"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000"/>
     </LinearLayout>
 
 
@@ -48,13 +51,15 @@
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07"
+            android:textColor="#000000"/>
         <EditText
             android:id="@+id/edittext2"
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_weight="0.13"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000"/>
     </LinearLayout>
 
     <LinearLayout
@@ -73,13 +78,15 @@
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07"
+            android:textColor="#000000"/>
         <EditText
             android:id="@+id/edittext3"
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_weight="0.13"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000"/>
     </LinearLayout>
 
     <LinearLayout
@@ -98,13 +105,15 @@
             android:layout_width="0sp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.07"/>
+            android:layout_weight="0.07"
+            android:textColor="#000000"/>
         <EditText
             android:id="@+id/edittext4"
             android:layout_gravity="center"
             android:layout_width="0dp"
             android:layout_weight="0.13"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000"/>
     </LinearLayout>
 
         <Button
@@ -113,7 +122,6 @@
             android:layout_height="0dp"
             android:layout_weight="12"
             android:background="#123456"
-            android:text="PRESS ME!"
             android:textColor="#543312"
             android:textSize="20sp"/>
 

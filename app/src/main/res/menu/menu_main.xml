@@ -8,4 +8,6 @@
         android:orderInCategory="100" android:showAsAction="always" />
     <item android:id="@+id/action_cmyk" android:title="@string/action_cmyk"
         android:orderInCategory="100" android:showAsAction="always" />
+    <item android:id="@+id/action_change_background" android:title="@string/change_background"
+        android:orderInCategory="100" android:showAsAction="never" />
 </menu>

@@ -1,14 +1,18 @@
 package com.example.joseen.colorselectorcojonudo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,7 +26,8 @@ public class MainActivity extends Activity {
 
     private static final int NELEMS = 4;
 
-    private Modes currentMode = Modes.RGB;
+    private Modes currentMode;
+    private boolean isBlackBackground;
 
     private SeekBar[] seekBars = new SeekBar[NELEMS];
     private TextView[] textViews = new TextView[NELEMS];
@@ -31,7 +36,7 @@ public class MainActivity extends Activity {
 
     private Button rect;
 
-    private enum Modes { RGB, HSV, YCBCR, CMYK }
+    protected enum Modes { RGB, HSV, YCBCR, CMYK }
 
     private int getRGBInt(int pos, int progress, int[] RGB){
         if(pos <= 2) {
@@ -124,7 +129,7 @@ public class MainActivity extends Activity {
 
     protected int getComplementaryColor(int[] RGB){
         return android.graphics.Color.rgb(255 - RGB[0],
-                255 -RGB[1], 255 - RGB[2]);
+                255 - RGB[1], 255 - RGB[2]);
     }
 
     private void changeColor(Button rect, int pos, int progress){
@@ -143,7 +148,7 @@ public class MainActivity extends Activity {
                 rect.setBackgroundColor(getCMYKInt(pos, progress, RGB));
         }
         rect.setTextColor(getComplementaryColor(getButtonRGB(rect)));
-        rect.setText(Arrays.toString(RGB));
+        rect.setText("PRESS ME!");
     }
 
     private void changeColorFromEditText(Button rect, int pos){
@@ -203,11 +208,11 @@ public class MainActivity extends Activity {
                 }else{
                     s = Float.toString((float) progress / 100 * 360);
                 }
-                e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 break;
             case CMYK:
                 s = Float.toString((float) progress / 100);
-                e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         }
         e.setText(s);
 
@@ -318,9 +323,19 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         rect = (Button) findViewById(R.id.rect);
         getElems();
+        isBlackBackground = false;
+        if (savedInstanceState != null) {
+            currentMode = Modes.values()[savedInstanceState.getInt("mode")];
+            if (savedInstanceState.getBoolean("isBlack")){
+                isBlackBackground = true;
+                switchBackgroundColors();
+            }
+        } else {
+            currentMode = Modes.RGB;
+        }
 
         for(int i = 0; i < NELEMS; i++){
             final int pos = i;
@@ -352,6 +367,19 @@ public class MainActivity extends Activity {
                 }
             });
         }
+        rect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent activityIntent = new Intent(v.getContext(), ColorInfoActivity.class);
+                Bundle newActivityInfo = new Bundle();
+                ColorDrawable drawable = (ColorDrawable) v.getBackground();
+                newActivityInfo.putInt("color", drawable.getColor());
+                newActivityInfo.putInt("mode", currentMode.ordinal());
+                newActivityInfo.putBoolean("isBlack", isBlackBackground);
+                activityIntent.putExtras(newActivityInfo);
+                startActivity(activityIntent);
+            }
+        });
 
     }
 
@@ -359,6 +387,14 @@ public class MainActivity extends Activity {
     protected void onResume(){
         super.onResume();
         changeMode(currentMode);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle state){
+        state.putInt("mode", currentMode.ordinal());
+        state.putBoolean("isBlack", isBlackBackground);
+        super.onSaveInstanceState(state);
     }
 
     @Override
@@ -370,9 +406,6 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id){
             case R.id.action_rgb:
@@ -387,9 +420,40 @@ public class MainActivity extends Activity {
             case R.id.action_cmyk:
                 changeMode(Modes.CMYK);
                 break;
+            case R.id.action_change_background:
+                switchBackgroundColors();
+
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    protected void switchBackgroundColors() {
+        isBlackBackground = !isBlackBackground;
+        switchViewBackground(findViewById(R.id.main));
+        for(TextView t: textViews){
+            switchTextColor(t);
+        }
+        for(EditText e: editTexts){
+            switchTextColor((TextView) e);
+        }
+
+    }
+
+    protected void switchTextColor(TextView t) {
+
+        if (isBlackBackground){
+            t.setTextColor(Color.WHITE);
+        }else{
+            t.setTextColor(Color.BLACK);
+        }
+    }
+
+    protected void switchViewBackground(View l) {
+        if(isBlackBackground){
+            l.setBackgroundColor(Color.BLACK);
+        }else{
+            l.setBackgroundColor(Color.WHITE);
+        }
+    }
 }

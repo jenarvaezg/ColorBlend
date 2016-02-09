@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ColorInfoActivity"
+            android:label="@string/title_activity_color_info" >
+        </activity>
     </application>
 
 </manifest>
