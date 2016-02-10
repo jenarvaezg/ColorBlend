@@ -1,139 +1,132 @@
 <LinearLayout
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:weightSum="24"
-
+    android:weightSum="26"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="8"
+        android:background="#000000">
+
         <TextView
             android:id="@+id/mainHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="Color Info"
             android:textColor="#000000"
             android:gravity="center"
             android:background="#FFFFFF"/>
+        <Button
+            android:id="@+id/mainColor"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:background="#123456"
+            style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
-    <Button
-        android:id="@+id/mainColor"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8"
-        android:background="#123456"
-        style="?android:attr/borderlessButtonStyle"/>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="6">
         <TextView
             android:id="@+id/complementaryHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="Complementary"
             android:textColor="#000000"
             android:gravity="center"
             android:background="#FFFFFF"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
         <Button
             android:id="@+id/complementary1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.5"
             android:background="#123456"
             style="?android:attr/borderlessButtonStyle"/>
         <Button
             android:id="@+id/complementary2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.5"
             android:background="#543312"
             style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="6">
         <TextView
             android:id="@+id/triadHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="Triad"
             android:textColor="#000000"
             android:gravity="center"
             android:background="#FFFFFF"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
         <Button
             android:id="@+id/triad1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#123456"
             style="?android:attr/borderlessButtonStyle"/>
         <Button
             android:id="@+id/triad2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#541233"
             style="?android:attr/borderlessButtonStyle"/>
         <Button
             android:id="@+id/triad3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#335412"
             style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="6">
         <TextView
             android:id="@+id/analogousHeader"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:text="Analogous"
             android:textColor="#000000"
             android:gravity="center"
             android:background="#FFFFFF"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="4">
         <Button
             android:id="@+id/analogous1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#123456"
             style="?android:attr/borderlessButtonStyle"/>
         <Button
             android:id="@+id/analogous2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#331254"/>
         <Button
             android:id="@+id/analogous3"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:background="#543312"
             style="?android:attr/borderlessButtonStyle"/>
     </LinearLayout>
-
 </LinearLayout>

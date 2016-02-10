@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.joseen.colorselectorcojonudo.ColorInfoActivity">
+    <item android:id="@+id/action_change_background" android:title="@string/change_background"
+        android:orderInCategory="100" android:showAsAction="always" />
+</menu>

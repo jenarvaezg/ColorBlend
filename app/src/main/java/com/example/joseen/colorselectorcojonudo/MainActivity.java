@@ -19,12 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.Arrays;
 
 public class MainActivity extends Activity {
 
 
     private static final int NELEMS = 4;
+
+    private static final int MAXPROGRESS = 1000;
+    private static final int MAXRGB = 255;
+    private static final int MAXYCBCR = 255;
+    private static final float MAXHUE = 360.0f;
 
     private Modes currentMode;
     private boolean isBlackBackground;
@@ -40,7 +44,7 @@ public class MainActivity extends Activity {
 
     private int getRGBInt(int pos, int progress, int[] RGB){
         if(pos <= 2) {
-            RGB[pos] = (int) ((float) progress / 100 * 255);
+            RGB[pos] = (int) ((float) progress / MAXPROGRESS * MAXRGB);
         }
         return android.graphics.Color.rgb(RGB[0], RGB[1], RGB[2]);
     }
@@ -49,9 +53,9 @@ public class MainActivity extends Activity {
         float[] hsv = new float[3];
         Color.RGBToHSV(RGB[0], RGB[1], RGB[2], hsv);
         if (pos == 0) {
-            hsv[pos] = (float) progress / 100.0f * 360.0f;
+            hsv[pos] = (float) progress / MAXPROGRESS * MAXHUE;
         } else if (pos <= 2) {
-            hsv[pos] = (float) progress / 100.0f;
+            hsv[pos] = (float) progress / MAXPROGRESS;
         }
         return Color.HSVToColor(hsv);
     }
@@ -65,11 +69,10 @@ public class MainActivity extends Activity {
         YCbCr[1] = (int)(128-0.169*RGB[0]-0.331*RGB[1]+0.500*RGB[2]);
         YCbCr[2] = (int)(128+0.500*RGB[0]-0.419*RGB[1]-0.081*RGB[2]);*/
         for(int i = 0; i < 3; i++){
-            YCbCr[i] = (int) ((float)seekBars[i].getProgress() / 100 * 255);
+            YCbCr[i] = (int) ((float)seekBars[i].getProgress() / MAXPROGRESS * MAXYCBCR);
         }
 
-
-        YCbCr[pos] = (int) ((float) progress / 100 * 255);
+        YCbCr[pos] = (int) ((float) progress / MAXPROGRESS * MAXYCBCR);
         RGB[0] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
                 408.583 * (YCbCr[2] - 128)    )) >> 8;
         RGB[1] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
@@ -78,8 +81,8 @@ public class MainActivity extends Activity {
         RGB[2] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
                 516.411 * (YCbCr[1] - 128)    )) >> 8;
         for (int i=0; i<3; i++) {
-            if (RGB[i] > 255)
-                RGB[i] = 255;
+            if (RGB[i] > MAXYCBCR)
+                RGB[i] = MAXYCBCR;
             else if (RGB[i] < 0)
                 RGB[i] = 0;
         }
@@ -107,13 +110,13 @@ public class MainActivity extends Activity {
 
         /*CMYK does some weird shit so we get the state from all seekbars first*/
         for(int i = 0; i < 4; i++){
-            CMYK[i] = ((float) seekBars[i].getProgress()) / 100;
+            CMYK[i] = ((float) seekBars[i].getProgress()) / MAXPROGRESS;
         }
         if(pos < 4){
-            CMYK[pos] = (float) progress / 100; //This makes sense if user inputs value from EditText
+            CMYK[pos] = (float) progress / MAXPROGRESS; //This makes sense if user inputs value from EditText
             //R = 255 × (1-C) × (1-K) || G = 255 × (1-M) × (1-K) || B = 255 × (1-Y) × (1-K)
             for(int i = 0; i < 3; i++){
-                RGB[i] = (int) (255 * (1.0f-CMYK[i]) * (1.0f-CMYK[3]));
+                RGB[i] = (int) (MAXRGB * (1.0f-CMYK[i]) * (1.0f-CMYK[3]));
             }
         }
         return android.graphics.Color.rgb(RGB[0], RGB[1], RGB[2]);
@@ -125,11 +128,6 @@ public class MainActivity extends Activity {
         return new int[]{Color.red(colorBefore),
                 Color.green(colorBefore),
                 Color.blue(colorBefore)};
-    }
-
-    protected int getComplementaryColor(int[] RGB){
-        return android.graphics.Color.rgb(255 - RGB[0],
-                255 - RGB[1], 255 - RGB[2]);
     }
 
     private void changeColor(Button rect, int pos, int progress){
@@ -147,8 +145,13 @@ public class MainActivity extends Activity {
             case CMYK:
                 rect.setBackgroundColor(getCMYKInt(pos, progress, RGB));
         }
-        rect.setTextColor(getComplementaryColor(getButtonRGB(rect)));
-        rect.setText("PRESS ME!");
+        rect.setTextColor(getContrastColor(getButtonRGB(rect)));
+        rect.setText("TOUCH ME!");
+    }
+
+    private int getContrastColor(int[] RGB) {
+        int color = android.graphics.Color.rgb(RGB[0], RGB[1], RGB[2]);
+        return ColorInfoActivity.getContrastColor(color);
     }
 
     private void changeColorFromEditText(Button rect, int pos){
@@ -161,28 +164,28 @@ public class MainActivity extends Activity {
         switch(currentMode){
             case RGB:
             case YCBCR:
-                if(f > 255)
-                    f = 255;
-                progress = (int) (f / 255 * 100);
+                if(f > MAXYCBCR)
+                    f = MAXYCBCR;
+                progress = (int) (f / MAXYCBCR * MAXPROGRESS);
                 e.setText(Integer.toString((int)f));
                 break;
             case HSV:
                 if(pos == 0){
-                    if(f > 360)
-                        f = 360;
-                    progress = (int) (f / 360 * 100);
+                    if(f > MAXHUE)
+                        f = MAXHUE;
+                    progress = (int) (f / MAXHUE * MAXPROGRESS);
 
                 }else{
                     if(f > 1)
                         f = 1;
-                    progress = (int) (f * 100);
+                    progress = (int) (f * MAXPROGRESS);
                 }
                 e.setText(Float.toString(f));
                 break;
             case CMYK:
                 if(f > 1)
                     f = 1;
-                progress = (int) (f * 100);
+                progress = (int) (f * MAXPROGRESS);
                 e.setText(Float.toString(f));
                 break;
         }
@@ -199,19 +202,19 @@ public class MainActivity extends Activity {
         switch (currentMode){
             case RGB:
             case YCBCR:
-                s = Integer.toString((int) ((float) progress * 255.0 / 100.0));
+                s = Integer.toString((int) ((float) progress * MAXYCBCR / MAXPROGRESS));
                 e.setInputType(InputType.TYPE_CLASS_NUMBER);
                 break;
             case HSV:
                 if(pos != 0){
-                    s = Float.toString((float) progress / 100);
+                    s = Float.toString((float) progress / MAXPROGRESS);
                 }else{
-                    s = Float.toString((float) progress / 100 * 360);
+                    s = Float.toString((float) progress / MAXPROGRESS * MAXHUE);
                 }
                 e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 break;
             case CMYK:
-                s = Float.toString((float) progress / 100);
+                s = Float.toString((float) progress / MAXPROGRESS);
                 e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         }
         e.setText(s);
@@ -219,33 +222,23 @@ public class MainActivity extends Activity {
     }
 
     private void changeTextViews(Modes mode){
+
         switch(mode){
             case RGB:
-                textViews[0].setText("R:");
-                textViews[1].setText("G:");
-                textViews[2].setText("B:");
-                currentMode = Modes.RGB;
-                break;
             case HSV:
-                textViews[0].setText("H:");
-                textViews[1].setText("S:");
-                textViews[2].setText("V:");
-                currentMode = Modes.HSV;
+            case CMYK:
+                for(int i = 0; i < mode.toString().length(); i++){
+                    textViews[i].setText(Character.toString(mode.toString().charAt(i)) + ":");
+                }
+
                 break;
-            case YCBCR:
+            case YCBCR: //special case
                 textViews[0].setText("Y:");
                 textViews[1].setText("Cb:");
                 textViews[2].setText("Cr:");
-                currentMode = Modes.YCBCR;
-                break;
-            case CMYK:
-                textViews[0].setText("C:");
-                textViews[1].setText("M:");
-                textViews[2].setText("Y:");
-                textViews[3].setText("K:");
-                currentMode = Modes.CMYK;
                 break;
         }
+        currentMode = mode;
     }
 
     private void changeLayouts(Modes mode){
@@ -287,6 +280,14 @@ public class MainActivity extends Activity {
                 s[2].getProgressDrawable().setTint(Color.YELLOW);
                 s[3].getProgressDrawable().setTint(Color.BLACK);
                 break;
+            default:
+                for(SeekBar sb: s){
+                    if(isBlackBackground) {
+                        sb.getProgressDrawable().setTint(Color.WHITE);
+                    }else{
+                        sb.getProgressDrawable().setTint(Color.BLACK);
+                    }
+                }
         }
 
     }
@@ -330,7 +331,6 @@ public class MainActivity extends Activity {
         if (savedInstanceState != null) {
             currentMode = Modes.values()[savedInstanceState.getInt("mode")];
             if (savedInstanceState.getBoolean("isBlack")){
-                isBlackBackground = true;
                 switchBackgroundColors();
             }
         } else {
@@ -339,6 +339,7 @@ public class MainActivity extends Activity {
 
         for(int i = 0; i < NELEMS; i++){
             final int pos = i;
+            seekBars[i].setMax(1000);
             seekBars[i].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -391,7 +392,7 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle state){
+    public void onSaveInstanceState(Bundle state) {
         state.putInt("mode", currentMode.ordinal());
         state.putBoolean("isBlack", isBlackBackground);
         super.onSaveInstanceState(state);
@@ -422,9 +423,7 @@ public class MainActivity extends Activity {
                 break;
             case R.id.action_change_background:
                 switchBackgroundColors();
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -437,6 +436,7 @@ public class MainActivity extends Activity {
         for(EditText e: editTexts){
             switchTextColor((TextView) e);
         }
+        changeSeekbarsTints(currentMode, seekBars);
 
     }
 
