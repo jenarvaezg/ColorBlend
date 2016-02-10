@@ -35,7 +35,8 @@
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="0.13"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLength="4"/>
         </LinearLayout>
 
 
@@ -61,7 +62,8 @@
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="0.13"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLength="4"/>
         </LinearLayout>
 
         <LinearLayout
@@ -86,7 +88,8 @@
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="0.13"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLength="4"/>
         </LinearLayout>
 
         <LinearLayout
@@ -111,7 +114,8 @@
                 android:layout_gravity="center"
                 android:layout_width="0dp"
                 android:layout_weight="0.13"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:maxLength="4"/>
         </LinearLayout>
     </LinearLayout>
     <Button
@@ -120,7 +124,7 @@
         android:layout_height="match_parent"
         android:layout_weight="12"
         android:background="#123456"
-        android:text="PRESS ME!"
+        android:text="@string/button_text"
         android:textColor="#543312"
         android:textSize="20sp"/>
 </LinearLayout>

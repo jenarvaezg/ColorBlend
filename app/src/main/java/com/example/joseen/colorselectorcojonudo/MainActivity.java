@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.Arrays;
+
 
 public class MainActivity extends Activity {
 
@@ -91,24 +93,7 @@ public class MainActivity extends Activity {
 
     private int getCMYKInt(int pos, int progress, int[] RGB){
         float[] CMYK = new float[4];
-
-        //TODO fix this too
-        //THIS IS THE CODE I WOULD LIKE TO USE
-
-        /*K = 1-max(R', G', B')
-        int max = RGB[0];
-        for (int i = 1; i < RGB.length; i++) {
-            if (RGB[i] > max) {
-                max = RGB[i];
-            }
-        }
-        CMYK[3] = 1.0f - (float) max / 100;
-        //C = (1-R'-K) / (1-K) || M = (1-G'-K) / (1-K) || Y = (1-B'-K) / (1-K)
-        for(int i = 0; i < 3; i++){
-            CMYK[i] = (1 - (float) RGB[i]/100 - CMYK[3]) / (1 - CMYK[3]);
-        }*/
-
-        /*CMYK does some weird shit so we get the state from all seekbars first*/
+        //ugly
         for(int i = 0; i < 4; i++){
             CMYK[i] = ((float) seekBars[i].getProgress()) / MAXPROGRESS;
         }
@@ -146,7 +131,6 @@ public class MainActivity extends Activity {
                 rect.setBackgroundColor(getCMYKInt(pos, progress, RGB));
         }
         rect.setTextColor(getContrastColor(getButtonRGB(rect)));
-        rect.setText("TOUCH ME!");
     }
 
     private int getContrastColor(int[] RGB) {

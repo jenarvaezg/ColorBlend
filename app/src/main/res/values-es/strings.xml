@@ -5,7 +5,6 @@
     <string name="action_ycbcr">YCbCr</string>
     <string name="action_cmyk">CMYK</string>
     <string name="title_activity_color_info">ColorBlend</string>
-    <string name="button_text">Touch me for more information about this color</string>
-    <string name="action_settings">Settings</string>
-    <string name="change_background">Switch Background Color</string>
+    <string name="button_text">Púlsame para obtener más información acerca de este color</string>
+    <string name="change_background">Alternar color de fondo</string>
 </resources>

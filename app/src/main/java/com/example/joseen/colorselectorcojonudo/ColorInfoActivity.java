@@ -76,7 +76,6 @@ public class ColorInfoActivity extends Activity {
         Bundle info = intent.getExtras();
         int color = Color.BLACK;
         isBlackBackground = false;
-        MainActivity.Modes mode = MainActivity.Modes.RGB;
         getElems();
         if(info != null){
             color = info.getInt("color");
@@ -91,10 +90,117 @@ public class ColorInfoActivity extends Activity {
             }
         }
         setupButtonsListeners();
-        setColorAttributes(mainColor, color, mode);
-        setComplementariesAtributes(color, mode);
-        setTriadAttributes(color, mode);
-        setAnalogousAttributes(color, mode);
+        setMainColorInfo(color);
+        setComplementariesAtributes(color);
+        setTriadAttributes(color);
+        setAnalogousAttributes(color);
+
+    }
+
+    private String arrayParenthesizedString(int[] arr){
+        String s = "(";
+        for(int i = 0; i < arr.length; i++){
+            s += Integer.toString(arr[i]);
+            if(i != arr.length - 1){
+                s += ", ";
+            }else{
+                s += ")";
+            }
+        }
+        return s;
+    }
+
+    private String arrayParenthesizedString(float[] arr, boolean percentage){
+        String s = "(";
+        for(int i = 0; i < arr.length; i++){
+            if(percentage) {
+                if (arr[i] <= 1.0) {
+                    s += Integer.toString((int) (arr[i] * 100)) + "%";
+                } else {
+                    s += Integer.toString((int) arr[i]);
+                }
+            }else{
+                s += Float.toString(arr[i]);
+            }
+            if(i != arr.length - 1){
+                s += ", ";
+            }else{
+                s += ")";
+            }
+        }
+        return s;
+    }
+
+    private String getHSVString(int color){
+        float[] HSV = new float[3];
+        Color.colorToHSV(color, HSV);
+        String hsvString = "HSV: " + arrayParenthesizedString(HSV, true);
+        return hsvString;
+    }
+
+
+    private String getYCbCrString(int color) {
+        int[] RGB = new int[]{Color.red(color),
+                Color.green(color),
+                Color.blue(color)};
+        int[] YCbCr = new int[3];
+
+        YCbCr[0] = (int)( 0.299   * RGB[0] + 0.587   * RGB[1] + 0.114   * RGB[2]);
+
+        YCbCr[1] = (int)(-0.16874 * RGB[0] - 0.33126 * RGB[1] + 0.50000 * RGB[2]);
+
+        YCbCr[2] = (int)( 0.50000 * RGB[0] - 0.41869 * RGB[1] - 0.08131 * RGB[2]);
+
+        /*YCbCr[0] = (int)(0.299*RGB[0]+0.587*RGB[1]+0.114*RGB[2]);
+        YCbCr[1] = (int)(128-0.169*RGB[0]-0.331*RGB[1]+0.500*RGB[2]);
+        YCbCr[2] = (int)(128+0.500*RGB[0]-0.419*RGB[1]-0.081*RGB[2]);*/
+
+        return "YCbCr: " + arrayParenthesizedString(YCbCr);
+    }
+
+
+    private String getCMYKString(int color) {
+        int[] RGB = new int[]{Color.red(color),
+                Color.green(color),
+                Color.blue(color)};
+        float[] CMYK = new float[4];
+        float[] RGBPrime = new float[3];
+        for(int i = 0; i < RGB.length; i++){
+            RGBPrime[i] = (float) RGB[i] / 255;
+        }
+        //K = 1-max(R', G', B')
+        float max = RGBPrime[0];
+        for (int i = 1; i < RGB.length; i++) {
+            if (RGBPrime[i] > max) {
+                max = RGBPrime[i];
+            }
+        }
+        CMYK[3] = 1.0f - max;
+        //C = (1-R'-K) / (1-K) || M = (1-G'-K) / (1-K) || Y = (1-B'-K) / (1-K)
+        for(int i = 0; i < 3; i++){
+            CMYK[i] = (1 - RGBPrime[i] - CMYK[3]) / (1 - CMYK[3]);
+        }
+
+        return "CMYK: " + arrayParenthesizedString(CMYK, true);
+
+    }
+
+
+    private void setMainColorInfo(int color) {
+        setColorAttributes(mainColor, color);
+        int[] RGB = new int[]{Color.red(color),
+                Color.green(color),
+                Color.blue(color)};
+
+        String rgbString = "RGB: " + arrayParenthesizedString(RGB);
+        String hsvString = getHSVString(color);
+        String CMYKString = getCMYKString(color);
+        String YCbCrString = "";//getYCbCrString(color);
+
+        String hexString = "Hex: " + mainColor.getText().toString();
+        String buttonString = rgbString + "\n" + hsvString + "\n" + CMYKString;
+        buttonString += "\n" + YCbCrString + "\n" + hexString;
+        mainColor.setText(buttonString);
     }
 
     private void setupButtonsListeners() {
@@ -122,32 +228,32 @@ public class ColorInfoActivity extends Activity {
 
     }
 
-    private void setAnalogousAttributes(int color, MainActivity.Modes mode) {
+    private void setAnalogousAttributes(int color) {
         float baseShift = 20f;
         for(int i = 0; i < analogous.length; i++){
             if(i % 2 != 0){
-                setColorAttributes(analogous[i], shiftColorHSV(color, baseShift * -i), mode);
+                setColorAttributes(analogous[i], shiftColorHSV(color, baseShift * -i));
             }else{
-                setColorAttributes(analogous[i], shiftColorHSV(color, baseShift * i), mode);
+                setColorAttributes(analogous[i], shiftColorHSV(color, baseShift * i));
             }
         }
     }
 
-    private void setTriadAttributes(int color, MainActivity.Modes mode) {
+    private void setTriadAttributes(int color) {
         float baseShift = 120f;
         for(int i = 0; i < triad.length; i++){
-            setColorAttributes(triad[i], shiftColorHSV(color, baseShift * i), mode);
+            setColorAttributes(triad[i], shiftColorHSV(color, baseShift * i));
         }
     }
 
-    private void setComplementariesAtributes(int color, MainActivity.Modes mode) {
+    private void setComplementariesAtributes(int color) {
         float baseShift = 180f;
         for(int i = 0; i < complementaries.length; i++){
-            setColorAttributes(complementaries[i], shiftColorHSV(color, baseShift * i), mode);
+            setColorAttributes(complementaries[i], shiftColorHSV(color, baseShift * i));
         }
     }
 
-    private void setColorAttributes(Button c, int color, MainActivity.Modes mode) {
+    private void setColorAttributes(Button c, int color) {
         c.setBackgroundColor(color);
         c.setText(String.format("#%06X", (0xFFFFFF & color)));
         c.setTextColor(getContrastColor(color));
