@@ -1,4 +1,4 @@
-package com.example.joseen.colorselectorcojonudo;
+package jenarvaezg.colorselectorcojonudo;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 
 
 public class MainActivity extends Activity {
@@ -40,6 +42,8 @@ public class MainActivity extends Activity {
     private LinearLayout[] linearLayouts = new LinearLayout[NELEMS];
     private EditText[] editTexts = new EditText[NELEMS];
 
+
+    private InterstitialAd mInterstitialAd;
     private Button rect;
 
     protected enum Modes { RGB, HSV, YCBCR, CMYK }
@@ -305,12 +309,34 @@ public class MainActivity extends Activity {
         linearLayouts[3] = (LinearLayout) findViewById(R.id.layout4);
     }
 
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         rect = (Button) findViewById(R.id.rect);
         getElems();
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3471223650360332/6052562801");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                goToColorInfo();
+            }
+        });
+
+        requestNewInterstitial();
+
         isBlackBackground = false;
         if (savedInstanceState != null) {
             currentMode = Modes.values()[savedInstanceState.getInt("mode")];
@@ -355,17 +381,25 @@ public class MainActivity extends Activity {
         rect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent activityIntent = new Intent(v.getContext(), ColorInfoActivity.class);
-                Bundle newActivityInfo = new Bundle();
-                ColorDrawable drawable = (ColorDrawable) v.getBackground();
-                newActivityInfo.putInt("color", drawable.getColor());
-                newActivityInfo.putInt("mode", currentMode.ordinal());
-                newActivityInfo.putBoolean("isBlack", isBlackBackground);
-                activityIntent.putExtras(newActivityInfo);
-                startActivity(activityIntent);
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    goToColorInfo();
+                }
             }
         });
 
+    }
+
+    private void goToColorInfo(){
+        Intent activityIntent = new Intent(rect.getContext(), ColorInfoActivity.class);
+        Bundle newActivityInfo = new Bundle();
+        ColorDrawable drawable = (ColorDrawable) rect.getBackground();
+        newActivityInfo.putInt("color", drawable.getColor());
+        newActivityInfo.putInt("mode", currentMode.ordinal());
+        newActivityInfo.putBoolean("isBlack", isBlackBackground);
+        activityIntent.putExtras(newActivityInfo);
+        startActivity(activityIntent);
     }
 
     @Override

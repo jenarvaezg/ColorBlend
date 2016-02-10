@@ -3,9 +3,8 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.0"
-
     defaultConfig {
-        applicationId "com.example.joseen.colorselectorcojonudo"
+        applicationId 'jenarvaezg.colorselectorcojonudo'
         minSdkVersion 22
         targetSdkVersion 23
         versionCode 1
@@ -17,8 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+
 }
