@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 
 
@@ -143,12 +143,20 @@ public class MainActivity extends Activity {
     }
 
     private void changeColorFromEditText(Button rect, int pos){
+
         changeColor(rect, pos, getProgressFromEditText(editTexts[pos], pos));
     }
 
     private int getProgressFromEditText(EditText e, int pos){
+        if(e.getText().toString().equals("")){
+            Log.d("JOSE", "AHORA ES CERO");
+            e.setText("0");
+        }
+        Log.d("JOSE", "'" + e.getText().toString() + "'");
         float f = Float.parseFloat(e.getText().toString());
         int progress = 0;
+
+
         switch(currentMode){
             case RGB:
             case YCBCR:
@@ -216,7 +224,8 @@ public class MainActivity extends Activity {
             case HSV:
             case CMYK:
                 for(int i = 0; i < mode.toString().length(); i++){
-                    textViews[i].setText(Character.toString(mode.toString().charAt(i)) + ":");
+                    String s = Character.toString(mode.toString().charAt(i)) + ":";
+                    textViews[i].setText(s);
                 }
 
                 break;
@@ -323,6 +332,7 @@ public class MainActivity extends Activity {
         rect = (Button) findViewById(R.id.rect);
         getElems();
 
+        setupElems();
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3471223650360332/6052562801");
 
@@ -346,9 +356,13 @@ public class MainActivity extends Activity {
             currentMode = Modes.RGB;
         }
 
+
+    }
+
+    private void setupElems() {
         for(int i = 0; i < NELEMS; i++){
             final int pos = i;
-            seekBars[i].setMax(1000);
+            seekBars[i].setMax(MAXPROGRESS);
             seekBars[i].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -387,7 +401,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-
     }
 
     private void goToColorInfo(){
@@ -451,7 +464,7 @@ public class MainActivity extends Activity {
             switchTextColor(t);
         }
         for(EditText e: editTexts){
-            switchTextColor((TextView) e);
+            switchTextColor(e);
         }
         changeSeekbarsTints(currentMode, seekBars);
 

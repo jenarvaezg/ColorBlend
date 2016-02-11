@@ -22,6 +22,8 @@ public class ColorInfoActivity extends Activity {
     private TextView[] textViews = new TextView[4];
     private boolean isBlackBackground;
 
+    private static final float HUERANGE  = 360f;
+
     private void getElems(){
         mainColor = (Button) findViewById(R.id.mainColor);
         complementaries[0] = (Button) findViewById(R.id.complementary1);
@@ -42,7 +44,7 @@ public class ColorInfoActivity extends Activity {
         float[] hsv = new float[3];
         Color.RGBToHSV(Color.red(color), Color.green(color),
                 Color.blue(color), hsv);
-        hsv[0] = (hsv[0] + shift) % 360;
+        hsv[0] = (hsv[0] + shift) % HUERANGE;
         return Color.HSVToColor(hsv);
     }
 
@@ -50,7 +52,7 @@ public class ColorInfoActivity extends Activity {
         float[] hsv = new float[3];
         Color.RGBToHSV(Color.red(color), Color.green(color),
                 Color.blue(color), hsv);
-        hsv[0] = (hsv[0] + 180) % 360;
+        hsv[0] = (hsv[0] + HUERANGE/2) % HUERANGE;
         hsv[1] += 0.5;
         if(hsv[1] > 1){
             hsv[1] -= 1.0;
@@ -223,7 +225,7 @@ public class ColorInfoActivity extends Activity {
     }
 
     private void setAnalogousAttributes(int color) {
-        float baseShift = 20f;
+        float baseShift = HUERANGE/12;
         for(int i = 0; i < analogous.length; i++){
             if(i % 2 != 0){
                 setColorAttributes(analogous[i], shiftColorHSV(color, baseShift * -i));
@@ -234,14 +236,14 @@ public class ColorInfoActivity extends Activity {
     }
 
     private void setTriadAttributes(int color) {
-        float baseShift = 120f;
+        float baseShift = HUERANGE/3;
         for(int i = 0; i < triad.length; i++){
             setColorAttributes(triad[i], shiftColorHSV(color, baseShift * i));
         }
     }
 
     private void setComplementariesAtributes(int color) {
-        float baseShift = 180f;
+        float baseShift = HUERANGE/2;
         for(int i = 0; i < complementaries.length; i++){
             setColorAttributes(complementaries[i], shiftColorHSV(color, baseShift * i));
         }
