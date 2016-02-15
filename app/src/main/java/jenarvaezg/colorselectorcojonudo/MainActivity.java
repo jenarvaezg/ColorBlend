@@ -19,9 +19,9 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdListener;
+/*import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.InterstitialAd;*/
 
 
 public class MainActivity extends Activity {
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     private EditText[] editTexts = new EditText[NELEMS];
 
 
-    private InterstitialAd mInterstitialAd;
+    //private InterstitialAd mInterstitialAd;
     private Button rect;
 
     protected enum Modes { RGB, HSV, YCBCR, CMYK }
@@ -121,6 +121,8 @@ public class MainActivity extends Activity {
 
     private void changeColor(Button rect, int pos, int progress){
         int[] RGB = getButtonRGB(rect);
+        /*Modes[] modes = new Modes[Modes.values().length];
+        modes[currentMode]*/
         switch(currentMode){
             case RGB:
                 rect.setBackgroundColor(getRGBInt(pos, progress, RGB));
@@ -319,10 +321,10 @@ public class MainActivity extends Activity {
     }
 
     private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder()
+       /* AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        mInterstitialAd.loadAd(adRequest);
+        mInterstitialAd.loadAd(adRequest);*/
     }
 
     @Override
@@ -333,7 +335,7 @@ public class MainActivity extends Activity {
         getElems();
 
         setupElems();
-        mInterstitialAd = new InterstitialAd(this);
+       /* mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3471223650360332/6052562801");
 
         mInterstitialAd.setAdListener(new AdListener() {
@@ -342,7 +344,7 @@ public class MainActivity extends Activity {
                 requestNewInterstitial();
                 goToColorInfo();
             }
-        });
+        });*/
 
         requestNewInterstitial();
 
@@ -394,11 +396,11 @@ public class MainActivity extends Activity {
         rect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInterstitialAd.isLoaded()) {
+               /* if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
-                } else {
+                } else {*/
                     goToColorInfo();
-                }
+                //}
             }
         });
     }
