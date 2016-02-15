@@ -5,3 +5,13 @@
 .DS_Store
 /build
 /captures
+*.class
+*.dex
+*.apk
+*.ap_
+bin/
+gen/
+*.iml
+.idea
+.gradle
+build/
