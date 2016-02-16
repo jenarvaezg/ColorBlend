@@ -1,6 +1,7 @@
 package jenarvaezg.colormodes;
 
 import android.graphics.Color;
+import android.text.InputType;
 
 import jenarvaezg.colorselectorcojonudo.MainActivity;
 
@@ -38,9 +39,35 @@ public class RGBColorMode implements ColorMode {
 
     @Override
     public int getColor(int[] progresses) {
-        for(int p: progresses){
-            p = (int) ((float) p / MainActivity.MAXPROGRESS * MAXRGB);
+        for(int i = 0; i < Nelems; i++){
+            progresses[i] = (int) ((float) progresses[i] / MainActivity.MAXPROGRESS * MAXRGB);
         }
         return android.graphics.Color.rgb(progresses[0], progresses[1], progresses[2]);
+    }
+
+    @Override
+    public String progressToText(int progress, int pos) {
+        return Integer.toString((int) ((float) progress * MAXRGB / MainActivity.MAXPROGRESS));
+    }
+
+    @Override
+    public int textToProgress(String text, int pos) {
+        Float progress = getFilteredProgress(Float.parseFloat(text), pos);
+        return (int)(progress * MainActivity.MAXPROGRESS / MAXRGB);
+    }
+
+    @Override
+    public int getInputType() {
+        return InputType.TYPE_CLASS_NUMBER;
+    }
+
+    @Override
+    public float getFilteredProgress(float progress, int pos) {
+        if(progress > MAXRGB) {
+            progress = MAXRGB;
+        }else if(progress < 0){
+            progress = 0;
+        }
+        return progress;
     }
 }

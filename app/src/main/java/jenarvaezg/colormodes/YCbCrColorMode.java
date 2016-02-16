@@ -1,6 +1,7 @@
 package jenarvaezg.colormodes;
 
 import android.graphics.Color;
+import android.text.InputType;
 
 import jenarvaezg.colorselectorcojonudo.MainActivity;
 
@@ -15,7 +16,7 @@ public class YCbCrColorMode implements ColorMode {
     private static int[] tints = {Color.BLACK, Color.BLACK, Color.BLACK};
     private static int[] blackBackgroundTints = {Color.WHITE, Color.WHITE, Color.WHITE};
 
-    @Override
+
     public int[] getMaxValues() {
         return new int[]{MAXYCBCR, MAXYCBCR, MAXYCBCR};
     }
@@ -60,5 +61,32 @@ public class YCbCrColorMode implements ColorMode {
                 RGB[i] = 0;
         }
         return android.graphics.Color.rgb(RGB[0], RGB[1], RGB[2]);
+    }
+
+    @Override
+    public String progressToText(int progress, int pos) {
+        return Integer.toString((int) ((float) progress * MAXYCBCR / MainActivity.MAXPROGRESS));
+    }
+
+    @Override
+    public int textToProgress(String text, int pos) {
+        Float progress = getFilteredProgress(Float.parseFloat(text), pos);
+        return (int)(progress * MainActivity.MAXPROGRESS / MAXYCBCR);
+    }
+
+
+    @Override
+    public int getInputType() {
+        return InputType.TYPE_CLASS_NUMBER;
+    }
+
+    @Override
+    public float getFilteredProgress(float progress, int pos) {
+        if(progress > MAXYCBCR) {
+            progress = MAXYCBCR;
+        }else if(progress < 0){
+            progress = 0;
+        }
+        return progress;
     }
 }

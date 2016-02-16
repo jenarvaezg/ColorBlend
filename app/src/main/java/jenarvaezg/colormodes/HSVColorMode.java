@@ -1,6 +1,7 @@
 package jenarvaezg.colormodes;
 
 import android.graphics.Color;
+import android.text.InputType;
 
 import jenarvaezg.colorselectorcojonudo.MainActivity;
 
@@ -10,7 +11,7 @@ import jenarvaezg.colorselectorcojonudo.MainActivity;
  */
 public class HSVColorMode implements ColorMode {
 
-    private static int MAXH = 255;
+    private static int MAXH = 360;
     private static int MAXSV = 1;
     private static String[] texts = {"H", "S", "V"};
     private static int Nelems = 3;
@@ -51,5 +52,46 @@ public class HSVColorMode implements ColorMode {
             }
         }
         return Color.HSVToColor(hsv);
+    }
+
+
+    @Override
+    public String progressToText(int progress, int pos) {
+        if(pos == 0){
+            return Float.toString(((float) progress * MAXH / MainActivity.MAXPROGRESS));
+        }
+        return Float.toString(((float) progress * MAXSV / MainActivity.MAXPROGRESS));
+    }
+
+    @Override
+    public int textToProgress(String text, int pos) {
+        Float progress = getFilteredProgress(Float.parseFloat(text), pos);
+        if(pos == 0){
+            return (int) (progress / MAXH * MainActivity.MAXPROGRESS);
+        }
+        return (int) (progress * MainActivity.MAXPROGRESS);
+
+    }
+
+    @Override
+    public int getInputType() {
+        return InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL;
+    }
+
+    @Override
+    public float getFilteredProgress(float progress, int pos) {
+        if(pos == 0){
+            if(progress > MAXH){
+                progress = MAXH;
+            }
+        }else{
+            if(progress > MAXSV){
+                progress = MAXSV;
+            }
+        }
+        if(progress < 0){
+            progress = 0;
+        }
+        return progress;
     }
 }
