@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
 
     private static final int NELEMS = 4;
 
-    private static final int MAXPROGRESS = 1000;
+    public static final int MAXPROGRESS = 1000;
     private static final int MAXRGB = 255;
     private static final int MAXYCBCR = 255;
     private static final float MAXHUE = 360.0f;

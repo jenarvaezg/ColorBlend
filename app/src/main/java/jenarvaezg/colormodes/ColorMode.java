@@ -1,4 +1,4 @@
-package jenarvaezg.colorselectorcojonudo;
+package jenarvaezg.colormodes;
 
 import android.graphics.Color;
 
@@ -9,6 +9,6 @@ public interface ColorMode {
     int[] getMaxValues();
     String[] getTexts();
     int getNElems();
-    Color[] getTints(boolean isBlackBackground);
+    int[] getTints(boolean isBlackBackground);
     int getColor(int[] progresses);
 }
