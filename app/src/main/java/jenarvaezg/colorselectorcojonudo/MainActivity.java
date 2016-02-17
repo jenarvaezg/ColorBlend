@@ -1,10 +1,17 @@
 package jenarvaezg.colorselectorcojonudo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,15 +24,16 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
+
 import jenarvaezg.colormodes.CMYKColorMode;
 import jenarvaezg.colormodes.ColorMode;
 import jenarvaezg.colormodes.HSVColorMode;
 import jenarvaezg.colormodes.RGBColorMode;
 import jenarvaezg.colormodes.YCbCrColorMode;
-
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 
 
 public class MainActivity extends Activity {
@@ -57,12 +65,12 @@ public class MainActivity extends Activity {
     }
 
     private void changeColor(Button rect) {
-        int[] RGB = getButtonRGB(rect);
         int[] progresses = new int[seekBars.length];
         for (int i = 0; i < seekBars.length; i++) {
             progresses[i] = seekBars[i].getProgress();
         }
         rect.setBackgroundColor(currentMode.getColor(progresses));
+        int[] RGB = getButtonRGB(rect);
         rect.setTextColor(getContrastColor(RGB));
     }
 
@@ -167,6 +175,11 @@ public class MainActivity extends Activity {
                 goToColorInfo();
             }
         });
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(takePictureIntent, 1);
+        }
+
 
         requestNewInterstitial();
         isBlackBackground = false;
@@ -180,6 +193,16 @@ public class MainActivity extends Activity {
         }
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1 && resultCode == RESULT_OK){
+            Bundle extras = data.getExtras();
+            Bitmap imageBitMap = (Bitmap) extras.get("data");
+            //mIm
+            Log.d("JOSE", imageBitMap.toString());
+        }
     }
 
     private void setupElems() {
