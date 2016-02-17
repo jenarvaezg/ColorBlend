@@ -16,6 +16,10 @@ public class CMYKColorMode implements ColorMode {
     private static int[] tints = {Color.CYAN, Color.MAGENTA, Color.YELLOW, Color.BLACK};
 
 
+    @Override
+    public int[] getMaxValues() {
+        return new int[]{MAXCMYK, MAXCMYK, MAXCMYK, MAXCMYK};
+    }
 
     @Override
     public String[] getTexts() {

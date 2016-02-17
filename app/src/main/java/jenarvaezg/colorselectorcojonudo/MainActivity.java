@@ -23,9 +23,9 @@ import jenarvaezg.colormodes.HSVColorMode;
 import jenarvaezg.colormodes.RGBColorMode;
 import jenarvaezg.colormodes.YCbCrColorMode;
 
-/*import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;*/
+import com.google.android.gms.ads.InterstitialAd;
 
 
 public class MainActivity extends Activity {
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     private LinearLayout[] linearLayouts = new LinearLayout[NELEMS];
     private EditText[] editTexts = new EditText[NELEMS];
 
-    //private InterstitialAd mInterstitialAd;
+    private InterstitialAd mInterstitialAd;
     private Button rect;
 
 
@@ -143,10 +143,10 @@ public class MainActivity extends Activity {
     }
 
     private void requestNewInterstitial() {
-       /* AdRequest adRequest = new AdRequest.Builder()
+        AdRequest adRequest = new AdRequest.Builder()
                 .build();
 
-        mInterstitialAd.loadAd(adRequest);*/
+        mInterstitialAd.loadAd(adRequest);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class MainActivity extends Activity {
         getElems();
 
         setupElems();
-       /* mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3471223650360332/6052562801");
 
         mInterstitialAd.setAdListener(new AdListener() {
@@ -166,7 +166,7 @@ public class MainActivity extends Activity {
                 requestNewInterstitial();
                 goToColorInfo();
             }
-        });*/
+        });
 
         requestNewInterstitial();
         isBlackBackground = false;
