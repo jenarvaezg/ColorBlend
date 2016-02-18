@@ -29,6 +29,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 
+import java.util.Arrays;
+
 import jenarvaezg.colormodes.CMYKColorMode;
 import jenarvaezg.colormodes.ColorMode;
 import jenarvaezg.colormodes.HSVColorMode;
@@ -175,10 +177,7 @@ public class MainActivity extends Activity {
                 goToColorInfo();
             }
         });
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(takePictureIntent, 1);
-        }
+
 
 
         requestNewInterstitial();
@@ -195,13 +194,48 @@ public class MainActivity extends Activity {
 
     }
 
+    private int getAverageColor(Bitmap bmp){
+
+        int pixelCount = bmp.getWidth()*bmp.getHeight();
+        int []redBucket = new int[pixelCount];;
+        int []greenBucket = new int[pixelCount];;
+        int []blueBucket = new int[pixelCount];;
+        int[] pixels = new int[pixelCount];
+        int count = 0;
+        bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+
+        for(int y = 0; y < bmp.getHeight(); y++){
+            for (int x = 0, w = bmp.getWidth(); x < w; x++){
+                int color = pixels[x + y * w]; // x + y * width
+                redBucket[count] = Color.red(color);
+                greenBucket[count] = Color.green(color);
+                blueBucket[count++]= Color.blue(color);
+            }
+        }
+        Arrays.sort(redBucket);
+        Arrays.sort(greenBucket);
+        Arrays.sort(blueBucket);
+        return Color.rgb(redBucket[pixelCount/2],
+                greenBucket[pixelCount/2],
+                blueBucket[pixelCount/2]);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(requestCode == 1 && resultCode == RESULT_OK){
             Bundle extras = data.getExtras();
-            Bitmap imageBitMap = (Bitmap) extras.get("data");
-            //mIm
-            Log.d("JOSE", imageBitMap.toString());
+            Bitmap bmp = (Bitmap) extras.get("data");
+            if(bmp != null){
+                int avg = getAverageColor(bmp);
+                int RGB[] = new int[]{Color.red(avg), Color.green(avg), Color.blue(avg)};
+                int maxVals[] = currentMode.getMaxValues();
+                currentMode = new RGBColorMode();
+                changeMode(currentMode);
+
+                for(int i = 0; i < RGB.length; i++){
+                    seekBars[i].setProgress(currentMode.textToProgress(Integer.toString(RGB[i]), i));
+                }
+            }
         }
     }
 
@@ -237,11 +271,11 @@ public class MainActivity extends Activity {
         rect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if (mInterstitialAd.isLoaded()) {
+                if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
-                } else {*/
+                } else {
                     goToColorInfo();
-                //}
+                }
             }
         });
     }
@@ -251,6 +285,15 @@ public class MainActivity extends Activity {
         Bundle newActivityInfo = new Bundle();
         ColorDrawable drawable = (ColorDrawable) rect.getBackground();
         newActivityInfo.putInt("color", drawable.getColor());
+        newActivityInfo.putBoolean("isBlack", isBlackBackground);
+        activityIntent.putExtras(newActivityInfo);
+        startActivity(activityIntent);
+    }
+
+    private void goToColorInfo(int color){
+        Intent activityIntent = new Intent(rect.getContext(), ColorInfoActivity.class);
+        Bundle newActivityInfo = new Bundle();
+        newActivityInfo.putInt("color", color);
         newActivityInfo.putBoolean("isBlack", isBlackBackground);
         activityIntent.putExtras(newActivityInfo);
         startActivity(activityIntent);
@@ -274,6 +317,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        ColorMode prevMode = currentMode;
         switch (id){
             case R.id.action_rgb:
                 currentMode = new RGBColorMode();
@@ -289,8 +333,15 @@ public class MainActivity extends Activity {
                 break;
             case R.id.action_change_background:
                 switchBackgroundColors();
+            case R.id.action_camera:
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(takePictureIntent, 1);
+                }
         }
-        changeMode(currentMode);
+        if(prevMode != currentMode) {
+            changeMode(currentMode);
+        }
         return super.onOptionsItemSelected(item);
     }
 
