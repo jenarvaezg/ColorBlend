@@ -69,7 +69,7 @@ public class HSVColorMode implements ColorMode {
         if(pos == 0){
             return (int) (progress / MAXH * MainActivity.MAXPROGRESS);
         }
-        return (int) (progress * MainActivity.MAXPROGRESS);
+        return (int) Math.ceil(progress * MainActivity.MAXPROGRESS);
 
     }
 

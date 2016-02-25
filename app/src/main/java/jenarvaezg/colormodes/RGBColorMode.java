@@ -53,7 +53,7 @@ public class RGBColorMode implements ColorMode {
     @Override
     public int textToProgress(String text, int pos) {
         Float progress = getFilteredProgress(Float.parseFloat(text), pos);
-        return (int)(progress * MainActivity.MAXPROGRESS / MAXRGB);
+        return (int)Math.ceil(progress * MainActivity.MAXPROGRESS / MAXRGB);
     }
 
     @Override

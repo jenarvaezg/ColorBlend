@@ -47,13 +47,9 @@ public class YCbCrColorMode implements ColorMode {
         for(int i = 0; i < 3; i++){
             YCbCr[i] = (int) ((float)progresses[i] / MainActivity.MAXPROGRESS * MAXYCBCR);
         }
-        RGB[0] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
-                408.583 * (YCbCr[2] - 128)    )) >> 8;
-        RGB[1] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
-                -100.291 * (YCbCr[1] - 128) +
-                -208.120 * (YCbCr[2] - 128)    )) >> 8;
-        RGB[2] = ((int) ( 298.082 * (YCbCr[0] - 16)   +
-                516.411 * (YCbCr[1] - 128)    )) >> 8;
+        RGB[0] = ((int) ( 298.082 * (YCbCr[0] - 16)   + 408.583 * (YCbCr[2] - 128)    )) >> 8;
+        RGB[1] = ((int) ( 298.082 * (YCbCr[0] - 16)   + -100.291 * (YCbCr[1] - 128) -208.120 * (YCbCr[2] - 128)    )) >> 8;
+        RGB[2] = ((int) ( 298.082 * (YCbCr[0] - 16)   + 516.411 * (YCbCr[1] - 128)    )) >> 8;
         for (int i=0; i<Nelems; i++) {
             if (RGB[i] > maxRGBs[i])
                 RGB[i] = maxRGBs[i];
@@ -71,7 +67,7 @@ public class YCbCrColorMode implements ColorMode {
     @Override
     public int textToProgress(String text, int pos) {
         Float progress = getFilteredProgress(Float.parseFloat(text), pos);
-        return (int)(progress * MainActivity.MAXPROGRESS / MAXYCBCR);
+        return (int)Math.ceil(progress * MainActivity.MAXPROGRESS / MAXYCBCR);
     }
 
 

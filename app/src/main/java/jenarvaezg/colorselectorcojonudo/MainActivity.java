@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import jenarvaezg.colormodes.CMYKColorMode;
@@ -83,6 +85,10 @@ public class MainActivity extends Activity {
 
     private void changeSeekbarPos(SeekBar s, int pos){
         String text = editTexts[pos].getText().toString();
+        if(text.equals("")){
+            text = "0";
+            editTexts[pos].setText(text);
+        }
         s.setProgress(currentMode.textToProgress(text, pos));
 
     }
@@ -290,14 +296,7 @@ public class MainActivity extends Activity {
         startActivity(activityIntent);
     }
 
-    private void goToColorInfo(int color){
-        Intent activityIntent = new Intent(rect.getContext(), ColorInfoActivity.class);
-        Bundle newActivityInfo = new Bundle();
-        newActivityInfo.putInt("color", color);
-        newActivityInfo.putBoolean("isBlack", isBlackBackground);
-        activityIntent.putExtras(newActivityInfo);
-        startActivity(activityIntent);
-    }
+
 
     @Override
     protected void onResume() {
